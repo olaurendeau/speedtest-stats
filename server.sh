@@ -49,7 +49,7 @@ do
    }' | tr '|' '"' > out
         elif echo $REQUEST | grep -qE '^/speedtest/worst'
         then
-            sqlite3 $database_name "select count(1), min(response_time), min(download_speed), min(upload_speed) from speedtest" | awk -F'|' '
+            sqlite3 $database_name "select count(1), max(response_time), min(download_speed), min(upload_speed) from speedtest" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
    { count[++i]=$1; response_time[i]=$2; download_speed[i]=$3; upload_speed[i]=$4 }
 
@@ -69,7 +69,7 @@ do
    }' | tr '|' '"' > out
         elif echo $REQUEST | grep -qE '^/speedtest/best'
         then
-            sqlite3 $database_name "select count(1), max(response_time), max(download_speed), max(upload_speed) from speedtest" | awk -F'|' '
+            sqlite3 $database_name "select count(1), min(response_time), max(download_speed), max(upload_speed) from speedtest" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
    { count[++i]=$1; response_time[i]=$2; download_speed[i]=$3; upload_speed[i]=$4 }
 
