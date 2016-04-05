@@ -1,0 +1,3 @@
+port=1515
+database_name="/Users/olaurendeau/workspace/speedtest-stats/speedtest.sqlite"
+speedtest_path="/usr/local/bin/speedtest-cli"
