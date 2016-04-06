@@ -27,7 +27,7 @@ do
         HTTP_404="HTTP/1.1 404 Not Found"
         # call a script here
         # Note: REQUEST is exported, so the script can parse it (to answer 200/403/404 status code + content)
-        if echo $REQUEST | grep -qE '^/speedtest/average'
+        if echo $REQUEST | grep -qE '^/api/speedtest/average'
         then
             sqlite3 $database_name "select count(1), round(avg(response_time), 2), round(avg(download_speed), 2), round(avg(upload_speed), 2) from speedtest" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
@@ -47,7 +47,7 @@ do
       }
       printf "]\n";
    }' | tr '|' '"' > out
-        elif echo $REQUEST | grep -qE '^/speedtest/worst'
+        elif echo $REQUEST | grep -qE '^/api/speedtest/worst'
         then
             sqlite3 $database_name "select count(1), max(response_time), min(download_speed), min(upload_speed) from speedtest" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
@@ -67,7 +67,7 @@ do
       }
       printf "]\n";
    }' | tr '|' '"' > out
-        elif echo $REQUEST | grep -qE '^/speedtest/best'
+        elif echo $REQUEST | grep -qE '^/api/speedtest/best'
         then
             sqlite3 $database_name "select count(1), min(response_time), max(download_speed), max(upload_speed) from speedtest" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
@@ -87,9 +87,9 @@ do
       }
       printf "]\n";
    }' | tr '|' '"' > out
-        elif echo $REQUEST | grep -qE '^/speedtest'
+        elif echo $REQUEST | grep -qE '^/api/speedtest'
         then
-            sqlite3 $database_name "SELECT * FROM speedtest ORDER BY id DESC LIMIT 100" | awk -F'|' '
+            sqlite3 $database_name "SELECT * FROM speedtest ORDER BY id DESC LIMIT 1000" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
    { id[++i]=$1; timestamp[i]=$2; host_distance[i]=$3; response_time[i]=$4; download_speed[i]=$5; upload_speed[i]=$6 }
 
@@ -109,20 +109,21 @@ do
       }
       printf "]\n";
    }' | tr '|' '"' > out
-        elif echo $REQUEST | grep -qE '^/'
+        elif echo $REQUEST | grep -qE '^/api/'
         then
             echo "
             {
                 |speedtest|: {
-                    |lasts|: |http://$HOST/speedtest|,
-                    |average|: |http://$HOST/speedtest/average|,
-                    |best|: |http://$HOST/speedtest/best|,
-                    |worst|: |http://$HOST/speedtest/worst|
+                    |lasts|: |http://$HOST/api/speedtest|,
+                    |average|: |http://$HOST/api/speedtest/average|,
+                    |best|: |http://$HOST/api/speedtest/best|,
+                    |worst|: |http://$HOST/api/speedtest/worst|
                 }
             }
             " | tr '|' '"' > out
         else
-            printf "%s\n%s %s\n\n%s\n" "$HTTP_404" "$HTTP_LOCATION" $REQUEST "Resource $REQUEST NOT FOUND!" > out
+            cat $(dirname $0)$REQUEST > out
+            #printf "%s\n%s %s\n\n%s\n" "$HTTP_404" "$HTTP_LOCATION" $REQUEST "Resource $REQUEST NOT FOUND!" > out
         fi
       fi
     done
