@@ -1,6 +1,4 @@
 $(function () {
-    console.log('coucou');
-
     var downloadSpeed = new Array;
     var uploadSpeed = new Array;
     var responseTime = new Array;
