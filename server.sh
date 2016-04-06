@@ -89,7 +89,7 @@ do
    }' | tr '|' '"' > out
         elif echo $REQUEST | grep -qE '^/api/speedtest'
         then
-            sqlite3 $database_name "SELECT * FROM speedtest ORDER BY id DESC LIMIT 1000" | awk -F'|' '
+            sqlite3 $database_name "SELECT id, strftime('%s', timestamp) as time, host_distance, response_time, download_speed, upload_speed FROM speedtest ORDER BY timestamp ASC LIMIT 1000" | awk -F'|' '
    # sqlite output line - pick up fields and store in arrays
    { id[++i]=$1; timestamp[i]=$2; host_distance[i]=$3; response_time[i]=$4; download_speed[i]=$5; upload_speed[i]=$6 }
 
@@ -98,7 +98,7 @@ do
       for(j=1;j<=i;j++){
          printf "  {\n"
          printf "    |id|:%d,\n",id[j]
-         printf "    |timestamp|:|%s|,\n",timestamp[j]
+         printf "    |timestamp|:%d,\n",timestamp[j]
          printf "    |host_distance|:%s,\n",host_distance[j]
          printf "    |response_time|:%s,\n",response_time[j]
          printf "    |download_speed|:%s,\n",download_speed[j]

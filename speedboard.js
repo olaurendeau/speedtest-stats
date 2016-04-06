@@ -1,49 +1,64 @@
 $(function () {
     console.log('coucou');
 
-    var timestamp = new Array;
     var downloadSpeed = new Array;
     var uploadSpeed = new Array;
     var responseTime = new Array;
     $.getJSON('/api/speedtest', function(data) {
 		data.forEach(function(item) {
-            timestamp.push(item.timestamp);
-            downloadSpeed.push(item.download_speed);
-            uploadSpeed.push(item.upload_speed);
+            timestamp = item.timestamp*1000;
+            downloadSpeed.push(new Array(timestamp, item.download_speed));
+            uploadSpeed.push(new Array(timestamp, item.upload_speed));
             responseTime.push(item.response_time);
-            console.log(item);
         });
 
         $('#container').highcharts({
+            chart: {
+                zoomType: 'x'
+            },
             title: {
-                text: 'Monthly Average Temperature',
-                x: -20 //center
+                text: 'Lafourchette Nantes Office internet performance'
             },
             subtitle: {
-                text: 'Source: WorldClimate.com',
-                x: -20
+                text: document.ontouchstart === undefined ?
+                        'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
             },
             xAxis: {
-                categories: timestamp
+                type: 'datetime'
             },
             yAxis: {
                 title: {
                     text: 'Mo/s'
-                },
-                plotLines: [{
-                    value: 0,
-                    width: 1,
-                    color: '#808080'
-                }]
-            },
-            tooltip: {
-                valueSuffix: 'Mo/s'
+                }
             },
             legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle',
-                borderWidth: 0
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
             },
             series: [{
                 name: 'Download speed (Mo/s)',
@@ -51,9 +66,6 @@ $(function () {
             },{
                 name: 'Upload speed (Mo/s)',
                 data: uploadSpeed
-            },{
-                name: 'Response time (ms)',
-                data: responseTime
             }]
         });
     });
