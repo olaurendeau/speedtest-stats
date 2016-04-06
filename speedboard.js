@@ -5,7 +5,7 @@ $(function () {
     var downloadSpeed = new Array;
     var uploadSpeed = new Array;
     var responseTime = new Array;
-    $.getJSON('http://localhost:1515/api/speedtest', function(data) {
+    $.getJSON('/api/speedtest', function(data) {
 		data.forEach(function(item) {
             timestamp.push(item.timestamp);
             downloadSpeed.push(item.download_speed);
