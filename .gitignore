@@ -1,2 +1,3 @@
 conf.txt
 *.sqlite
+/node_modules/

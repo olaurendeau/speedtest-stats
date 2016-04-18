@@ -11,6 +11,8 @@ $(function () {
                 responseTime.push(item.response_time);
             });
 
+            console.log(downloadSpeed);
+
             $('#container').highcharts({
                 chart: {
                     zoomType: 'x'

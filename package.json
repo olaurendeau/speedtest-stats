@@ -1,0 +1,30 @@
+{
+  "name": "speedtest-stats",
+  "version": "1.0.0",
+  "description": "Gather and publish information about speedtests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olaurendeau/speedtest-stats.git"
+  },
+  "keywords": [
+    "speedtest",
+    "api",
+    "dashboard",
+    "historize",
+    "stats"
+  ],
+  "author": "olaurendeau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olaurendeau/speedtest-stats/issues"
+  },
+  "homepage": "https://github.com/olaurendeau/speedtest-stats#readme",
+  "dependencies": {
+    "express": "^4.13.4",
+    "sqlite3": "^3.1.3"
+  }
+}
